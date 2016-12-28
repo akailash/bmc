@@ -52,8 +52,8 @@ func main() {
 	// information in the background. Delegates can be used for receiving
 	// events when members join or leave.
 	//Init maps in store
-	store.cache = make(map[int]Msg)
-	wanted.cache = make(map[int][]string)
+	store.cache = make(map[int64]*NewMsg)
+	wanted.cache = make(map[int64][]string)
 	go MsgServer()
 	go Fetcher(&store, &wanted)
 	go Digestrx(&store, &wanted)

@@ -1,0 +1,26 @@
+syntax = "proto2";
+package main;
+
+message newMsg {
+    required Header head = 1;
+    optional ConfigMsg config = 10;
+    optional PurgeMsg purge = 11;
+    optional OtherMsg other = 12;
+}
+
+message Header {
+    required int64 msg_id = 1;
+    required int32 msg_length = 2;
+    enum MsgType { UNKNOWN = 0; CONFIG = 1; PURGE = 2; OTHER = 3; }
+    required MsgType msg_type = 3;
+}
+message ConfigMsg {
+    required bytes data = 100;
+}
+message PurgeMsg {
+    required bytes data = 100;
+}
+message OtherMsg {
+    required bytes data = 100;
+}
+

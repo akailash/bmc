@@ -1,9 +1,8 @@
 package main
 
 import (
-	"bytes"
-	"encoding/gob"
 	"fmt"
+	"github.com/golang/protobuf/proto"
 	"log"
 	"math/rand"
 	"net"
@@ -14,7 +13,7 @@ const (
 	srvAddr         = "224.0.0.1:9999"
 	maxDatagramSize = 8192
 	interval        = time.Duration(1000) //Millisecond
-	maxLength       = 100                 //LEngth of msg
+	maxLength       = int32(100)          //Length of msg
 )
 
 type Msg struct {
@@ -31,7 +30,7 @@ const (
 
 var src = rand.NewSource(time.Now().UnixNano())
 
-func RandStringBytesMaskImprSrc(n int) string {
+func RandStringBytesMaskImprSrc(n int32) string {
 	b := make([]byte, n)
 	// A src.Int63() generates 63 random bits, enough for letterIdxMax
 	// characters!
@@ -50,7 +49,7 @@ func RandStringBytesMaskImprSrc(n int) string {
 	return string(b)
 }
 
-func RandomMsgGen(srvAddr string, interval time.Duration, maxLength int) {
+func RandomMsgGen(srvAddr string, interval time.Duration, maxLength int32) {
 	log.Println("Generating Random Messages")
 	addr, err := net.ResolveUDPAddr("udp", srvAddr)
 	if err != nil {
@@ -62,23 +61,25 @@ func RandomMsgGen(srvAddr string, interval time.Duration, maxLength int) {
 		log.Fatal(err)
 	}
 
-	id := 1
+	var id int64 = 1
 	for {
-		udpsendbuf := new(bytes.Buffer)
-		encoder := gob.NewEncoder(udpsendbuf)
-		m := Msg{id, RandStringBytesMaskImprSrc(maxLength)}
+		m := &NewMsg{
+			Head: &Header{
+				MsgId:     proto.Int64(id),
+				MsgLength: proto.Int32(maxLength),
+				MsgType:   Header_CONFIG.Enum(),
+			},
+			Config: &ConfigMsg{
+				Data: []byte(RandStringBytesMaskImprSrc(maxLength)),
+			},
+		}
+		//m := Msg{id, RandStringBytesMaskImprSrc(maxLength)}
 		log.Println("Sending message", m)
-		err = encoder.Encode(m)
+		sendbuf, err := proto.Marshal(m)
 		if err != nil {
-			log.Fatal("gob Encode failed", err)
+			log.Fatal("protobuf Marshal failed", err)
 		}
-		sendbuf := make([]byte, 1600)
-		n, err := udpsendbuf.Read(sendbuf)
-		if err != nil {
-			log.Fatal(err, "filling slice from buffer")
-		}
-		//log.Println("Sending bytes", sendbuf[:n])
-		n, err = c.Write(sendbuf[:n]) /*fire it out an existing udp
+		_, err = c.Write(sendbuf) /*fire it out an existing udp
 		connection*/
 		if err != nil {
 			log.Fatal(err, "sending slice")

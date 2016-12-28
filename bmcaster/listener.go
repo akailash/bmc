@@ -1,8 +1,7 @@
 package main
 
 import (
-	"bytes"
-	"encoding/gob"
+	"github.com/golang/protobuf/proto"
 	"log"
 	"net"
 )
@@ -21,23 +20,22 @@ func Listener(store *msgstore) {
 	l, err := net.ListenMulticastUDP("udp", nil, addr)
 	l.SetReadBuffer(MaxDatagramSize)
 	defer l.Close()
-	var m Msg
+	m := new(NewMsg)
+	b := make([]byte, MaxDatagramSize)
 	for {
-		b := make([]byte, MaxDatagramSize)
 		n, src, err := l.ReadFromUDP(b)
 		if err != nil {
 			log.Fatal("ReadFromUDP failed:", err)
 		}
 		log.Println(n, "bytes read from", src)
-		buf := bytes.NewBuffer(b)
-		decoder := gob.NewDecoder(buf)
-		err = decoder.Decode(&m)
+		err = proto.Unmarshal(b[:n], m)
 		if err != nil {
-			log.Fatal("gob Decode failed", err)
+			log.Fatal("protobuf Unmarshal failed", err)
 		}
-		log.Println("Received message", m.MsgID)
+		log.Println("Received message", m.Head.GetMsgId())
 		//TODO check whether value already exists in store?
 		store.Add(m)
-		SaveAsJson(m, StoreDir)
+		SaveAsFile(m, StoreDir)
+		m.Reset()
 	}
 }

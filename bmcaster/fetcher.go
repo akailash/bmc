@@ -1,7 +1,7 @@
 package main
 
 import (
-	"encoding/json"
+	"github.com/golang/protobuf/proto"
 	"io/ioutil"
 	"log"
 	"net"
@@ -47,7 +47,7 @@ func Fetcher(store *msgstore, wanted *wantedstore) {
 			for _, src := range srcs {
 				log.Println("Fetcher fetching MsgID:", k, "from", src)
 
-				resp, err := client.Get("http://" + src + FetcherPort + "/" + strconv.Itoa(k))
+				resp, err := client.Get("http://" + src + FetcherPort + "/" + strconv.FormatInt(k, 10))
 				if err != nil {
 					log.Println("Error fetching ", k, "from", src, err)
 					continue
@@ -58,13 +58,13 @@ func Fetcher(store *msgstore, wanted *wantedstore) {
 					resp.Body.Close()
 					continue
 				}
-				var m Msg
-				json.Unmarshal(b, &m)
+				m := new(NewMsg)
+				proto.Unmarshal(b, m)
 				log.Println("Downloaded message: ", m)
 				resp.Body.Close()
 				wanted.Delete(k)
 				store.Add(m)
-				SaveAsJson(m, StoreDir)
+				SaveAsFile(m, StoreDir)
 				//Fetch next key
 				break
 			}

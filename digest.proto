@@ -1,0 +1,12 @@
+syntax = "proto2";
+package main;
+
+message newDigest {
+    repeated Range ranges = 10;
+    repeated int64 keys = 11;
+}
+
+message Range {
+    required int64 LLimit = 100;
+    required int64 ULimit = 101;
+}

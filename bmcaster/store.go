@@ -6,29 +6,29 @@ import (
 )
 
 type keyrange struct {
-	Llimit, Ulimit int
+	Llimit, Ulimit int64
 }
 type msgstore struct {
 	sync.RWMutex
-	cache  map[int]Msg
+	cache  map[int64]*NewMsg
 	ranges []keyrange
-	keys   []int
+	keys   []int64
 }
 
 type wantedstore struct {
 	sync.RWMutex
-	cache map[int][]string
+	cache map[int64][]string
 }
 
-func (store *msgstore) Add(m Msg) {
+func (store *msgstore) Add(m *NewMsg) {
 	store.Lock()
-	store.cache[m.MsgID] = m
-	store.keys = append(store.keys, m.MsgID)
+	store.cache[m.GetHead().GetMsgId()] = m
+	store.keys = append(store.keys, m.GetHead().GetMsgId())
 	store.Unlock()
 }
-func (store *msgstore) GetKeys() (ranges []keyrange, keys []int) {
+func (store *msgstore) GetKeys() (ranges []keyrange, keys []int64) {
 	store.RLock()
-	keys = make([]int, len(store.keys))
+	keys = make([]int64, len(store.keys))
 	copy(keys, store.keys)
 	ranges = make([]keyrange, len(store.ranges))
 	copy(ranges, store.ranges)
@@ -36,7 +36,7 @@ func (store *msgstore) GetKeys() (ranges []keyrange, keys []int) {
 	return ranges, keys
 }
 
-func (store *msgstore) DiffKeys(ranges []keyrange, keys []int) (unknown []int) {
+func (store *msgstore) DiffKeys(ranges []keyrange, keys []int64) (unknown []int64) {
 	store.RLock()
 	for _, r := range ranges {
 		for i := r.Llimit; i <= r.Ulimit; i++ {
@@ -63,11 +63,18 @@ func removeRange(s []keyrange, i int) []keyrange {
 	s[len(s)-1], s[i] = s[i], s[len(s)-1]
 	return s[:len(s)-1]
 }
+
+type int64arr []int64
+
+func (a int64arr) Len() int           { return len(a) }
+func (a int64arr) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a int64arr) Less(i, j int) bool { return a[i] < a[j] }
+
 func (store *msgstore) Clean() {
 	store.Lock()
 	bin := store.cache
-	store.cache = make(map[int]Msg)
-	sort.Ints(store.keys)
+	store.cache = make(map[int64]*NewMsg)
+	sort.Sort(int64arr(store.keys))
 	for _, k := range store.keys {
 		added := false
 		for i, r := range store.ranges {
@@ -102,7 +109,7 @@ func (store *msgstore) Clean() {
 	}
 }
 
-func (wanted *wantedstore) Add(keys []int, host string) {
+func (wanted *wantedstore) Add(keys []int64, host string) {
 	wanted.Lock()
 	for _, k := range keys {
 		wanted.cache[k] = append(wanted.cache[k], host)
@@ -110,7 +117,7 @@ func (wanted *wantedstore) Add(keys []int, host string) {
 	wanted.Unlock()
 
 }
-func (wanted *wantedstore) Delete(k int) {
+func (wanted *wantedstore) Delete(k int64) {
 	wanted.Lock()
 	delete(wanted.cache, k)
 	wanted.Unlock()

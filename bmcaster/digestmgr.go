@@ -1,8 +1,7 @@
 package main
 
 import (
-	"bytes"
-	"encoding/gob"
+	"github.com/golang/protobuf/proto"
 	"github.com/hashicorp/serf/serf"
 	"log"
 	"math/rand"
@@ -12,28 +11,35 @@ import (
 
 type Digest struct {
 	Ranges []keyrange
-	Keys   []int
+	Keys   []int64
+}
+
+func (m Digest) makeProtobuf() *NewDigest {
+	p := &NewDigest{
+		Keys: m.Keys,
+	}
+	for _, r := range m.Ranges {
+		pRange := new(Range)
+		pRange.LLimit = proto.Int64(r.Llimit)
+		pRange.ULimit = proto.Int64(r.Ulimit)
+		p.Ranges = append(p.Ranges, pRange)
+	}
+
+	return p
 }
 
 func Digesttx(store *msgstore, list *serf.Serf) {
 	log.Println("Starting Digesttx")
-	sendbuf := make([]byte, MaxDatagramSize)
 	for {
 		time.Sleep(Digestinterval * time.Millisecond)
 		//Get list of keys in store
 		var digestmsg Digest
 		digestmsg.Ranges, digestmsg.Keys = store.GetKeys()
-		udpsendbuf := new(bytes.Buffer)
-		encoder := gob.NewEncoder(udpsendbuf)
-		err := encoder.Encode(digestmsg)
+		protodigest := digestmsg.makeProtobuf()
+		sendbuf, err := proto.Marshal(protodigest)
 		if err != nil {
-			log.Fatal("gob Encode failed", err)
+			log.Fatal("protobuf Marshal failed", err)
 		}
-		n, err := udpsendbuf.Read(sendbuf)
-		if err != nil {
-			log.Fatal(err, "filling slice from buffer")
-		}
-
 		//Get list of current members
 		nodes := list.Members()
 		//Send keys to random nodes in list
@@ -50,7 +56,7 @@ func Digesttx(store *msgstore, list *serf.Serf) {
 			if err != nil {
 				log.Fatal(err)
 			}
-			c.Write(sendbuf[:n])
+			c.Write(sendbuf)
 			log.Println("Sent Digest to", to.Name)
 			i++
 			c.Close()
@@ -79,14 +85,20 @@ func Digestrx(store *msgstore, wanted *wantedstore) {
 			}
 
 			//Decode keys
-			buf := bytes.NewBuffer(b[:n])
-			decoder := gob.NewDecoder(buf)
-			var digestmsg Digest
-			err = decoder.Decode(&digestmsg)
+			protodigest := new(NewDigest)
+			err = proto.Unmarshal(b[:n], protodigest)
 			if err != nil {
-				log.Fatal("gob Decode failed: ", err, " No. of bytes in digest: ", n)
+				log.Fatal("protobuf Unmarshal failed: ", err, " No. of bytes in digest: ", n)
 			}
 			log.Println("Received ", n, " bytes digest from ", src)
+			var digestmsg Digest
+			digestmsg.Keys = protodigest.GetKeys()
+			for _, pRange := range protodigest.Ranges {
+				var pkeyrange keyrange
+				pkeyrange.Llimit = pRange.GetLLimit()
+				pkeyrange.Ulimit = pRange.GetULimit()
+				digestmsg.Ranges = append(digestmsg.Ranges, pkeyrange)
+			}
 			//Compare keys with store as well as disk
 			unknown := store.DiffKeys(digestmsg.Ranges, digestmsg.Keys)
 			if unknown != nil {
