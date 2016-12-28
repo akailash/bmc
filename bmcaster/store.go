@@ -10,7 +10,6 @@ type keyrange struct {
 }
 type msgstore struct {
 	sync.RWMutex
-	cache  map[int64]*NewMsg
 	ranges []keyrange
 	keys   []int64
 }
@@ -22,7 +21,6 @@ type wantedstore struct {
 
 func (store *msgstore) Add(m *NewMsg) {
 	store.Lock()
-	store.cache[m.GetHead().GetMsgId()] = m
 	store.keys = append(store.keys, m.GetHead().GetMsgId())
 	store.Unlock()
 }
@@ -40,19 +38,14 @@ func (store *msgstore) DiffKeys(ranges []keyrange, keys []int64) (unknown []int6
 	store.RLock()
 	for _, r := range ranges {
 		for i := r.Llimit; i <= r.Ulimit; i++ {
-			if _, found := store.cache[i]; !found {
-				if !CheckJsonDisk(i, StoreDir) {
-					unknown = append(unknown, i)
-				}
+			if !CheckJsonDisk(i, StoreDir) {
+				unknown = append(unknown, i)
 			}
-
 		}
 	}
 	for _, k := range keys {
-		if _, found := store.cache[k]; !found {
-			if !CheckJsonDisk(k, StoreDir) {
-				unknown = append(unknown, k)
-			}
+		if !CheckJsonDisk(k, StoreDir) {
+			unknown = append(unknown, k)
 		}
 	}
 
@@ -72,8 +65,6 @@ func (a int64arr) Less(i, j int) bool { return a[i] < a[j] }
 
 func (store *msgstore) Clean() {
 	store.Lock()
-	bin := store.cache
-	store.cache = make(map[int64]*NewMsg)
 	sort.Sort(int64arr(store.keys))
 	for _, k := range store.keys {
 		added := false
@@ -103,10 +94,6 @@ func (store *msgstore) Clean() {
 	//This lets Go GC collect the memory from the slice
 	store.keys = nil
 	store.Unlock()
-	for k := range bin {
-		//For a map, each element should be deleted
-		delete(bin, k)
-	}
 }
 
 func (wanted *wantedstore) Add(keys []int64, host string) {
