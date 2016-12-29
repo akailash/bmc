@@ -1,0 +1,298 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+Add	bmcaster/store.go	/^func (store *msgstore) Add(m *NewMsg) {$/;"	d
+Add	bmcaster/store.go	/^func (store *msgstore) Add(m *NewMsg) {$/;"	f
+Add	bmcaster/store.go	/^func (wanted *wantedstore) Add(keys []int64, host string) {$/;"	d
+Add	bmcaster/store.go	/^func (wanted *wantedstore) Add(keys []int64, host string) {$/;"	f
+CheckJsonDisk	bmcaster/diskstore.go	/^func CheckJsonDisk(msgid int64, dir string) bool {$/;"	d
+CheckJsonDisk	bmcaster/diskstore.go	/^func CheckJsonDisk(msgid int64, dir string) bool {$/;"	f
+Clean	bmcaster/store.go	/^func (store *msgstore) Clean() {$/;"	d
+Clean	bmcaster/store.go	/^func (store *msgstore) Clean() {$/;"	f
+Cleantime	bmcaster/bmcaster.go	/^	Cleantime       = time.Duration(30) \/\/Second$/;"	c
+ConfigMsg	bmcaster/bimodal.pb.go	/^type ConfigMsg struct {$/;"	d
+ConfigMsg	bmcaster/bimodal.pb.go	/^type ConfigMsg struct {$/;"	t
+ConfigMsg	multicaster/bimodal.pb.go	/^type ConfigMsg struct {$/;"	d
+ConfigMsg	multicaster/bimodal.pb.go	/^type ConfigMsg struct {$/;"	t
+Delete	bmcaster/store.go	/^func (wanted *wantedstore) Delete(k int64) {$/;"	d
+Delete	bmcaster/store.go	/^func (wanted *wantedstore) Delete(k int64) {$/;"	f
+DiffKeys	bmcaster/store.go	/^func (store *msgstore) DiffKeys(ranges []keyrange, keys []int64) (unknown []int64) {$/;"	d
+DiffKeys	bmcaster/store.go	/^func (store *msgstore) DiffKeys(ranges []keyrange, keys []int64) (unknown []int64) {$/;"	f
+Digest	bmcaster/digestmgr.go	/^type Digest struct {$/;"	d
+Digest	bmcaster/digestmgr.go	/^type Digest struct {$/;"	t
+Digestinterval	bmcaster/bmcaster.go	/^	Digestinterval  = time.Duration(5000) \/\/Millisecond$/;"	c
+Digestport	bmcaster/bmcaster.go	/^	Digestport      = ":6000"$/;"	c
+Digestratio	bmcaster/bmcaster.go	/^	Digestratio     = 0.5                 \/\/Ratio of nodes which should be send a digest msg$/;"	c
+Digestrx	bmcaster/digestmgr.go	/^func Digestrx(store *msgstore, wanted *wantedstore) {$/;"	d
+Digestrx	bmcaster/digestmgr.go	/^func Digestrx(store *msgstore, wanted *wantedstore) {$/;"	f
+Digesttx	bmcaster/digestmgr.go	/^func Digesttx(store *msgstore, list *serf.Serf) {$/;"	d
+Digesttx	bmcaster/digestmgr.go	/^func Digesttx(store *msgstore, list *serf.Serf) {$/;"	f
+ERROR	up.sh	/^ERROR(){$/;"	f
+Enum	bmcaster/bimodal.pb.go	/^func (x Header_MsgType) Enum() *Header_MsgType {$/;"	d
+Enum	bmcaster/bimodal.pb.go	/^func (x Header_MsgType) Enum() *Header_MsgType {$/;"	f
+Enum	multicaster/bimodal.pb.go	/^func (x Header_MsgType) Enum() *Header_MsgType {$/;"	d
+Enum	multicaster/bimodal.pb.go	/^func (x Header_MsgType) Enum() *Header_MsgType {$/;"	f
+FetchDuration	bmcaster/bmcaster.go	/^	FetchDuration   = time.Duration(5000) \/\/Millisecond$/;"	c
+Fetcher	bmcaster/fetcher.go	/^func Fetcher(store *msgstore, wanted *wantedstore) {$/;"	d
+Fetcher	bmcaster/fetcher.go	/^func Fetcher(store *msgstore, wanted *wantedstore) {$/;"	f
+FetcherPort	bmcaster/bmcaster.go	/^	FetcherPort     = ":3000"$/;"	c
+GetConfig	bmcaster/bimodal.pb.go	/^func (m *NewMsg) GetConfig() *ConfigMsg {$/;"	d
+GetConfig	bmcaster/bimodal.pb.go	/^func (m *NewMsg) GetConfig() *ConfigMsg {$/;"	f
+GetConfig	multicaster/bimodal.pb.go	/^func (m *NewMsg) GetConfig() *ConfigMsg {$/;"	d
+GetConfig	multicaster/bimodal.pb.go	/^func (m *NewMsg) GetConfig() *ConfigMsg {$/;"	f
+GetData	bmcaster/bimodal.pb.go	/^func (m *ConfigMsg) GetData() []byte {$/;"	d
+GetData	bmcaster/bimodal.pb.go	/^func (m *ConfigMsg) GetData() []byte {$/;"	f
+GetData	bmcaster/bimodal.pb.go	/^func (m *OtherMsg) GetData() []byte {$/;"	d
+GetData	bmcaster/bimodal.pb.go	/^func (m *OtherMsg) GetData() []byte {$/;"	f
+GetData	bmcaster/bimodal.pb.go	/^func (m *PurgeMsg) GetData() []byte {$/;"	d
+GetData	bmcaster/bimodal.pb.go	/^func (m *PurgeMsg) GetData() []byte {$/;"	f
+GetData	multicaster/bimodal.pb.go	/^func (m *ConfigMsg) GetData() []byte {$/;"	d
+GetData	multicaster/bimodal.pb.go	/^func (m *ConfigMsg) GetData() []byte {$/;"	f
+GetData	multicaster/bimodal.pb.go	/^func (m *OtherMsg) GetData() []byte {$/;"	d
+GetData	multicaster/bimodal.pb.go	/^func (m *OtherMsg) GetData() []byte {$/;"	f
+GetData	multicaster/bimodal.pb.go	/^func (m *PurgeMsg) GetData() []byte {$/;"	d
+GetData	multicaster/bimodal.pb.go	/^func (m *PurgeMsg) GetData() []byte {$/;"	f
+GetHead	bmcaster/bimodal.pb.go	/^func (m *NewMsg) GetHead() *Header {$/;"	d
+GetHead	bmcaster/bimodal.pb.go	/^func (m *NewMsg) GetHead() *Header {$/;"	f
+GetHead	multicaster/bimodal.pb.go	/^func (m *NewMsg) GetHead() *Header {$/;"	d
+GetHead	multicaster/bimodal.pb.go	/^func (m *NewMsg) GetHead() *Header {$/;"	f
+GetKeys	bmcaster/digest.pb.go	/^func (m *NewDigest) GetKeys() []int64 {$/;"	d
+GetKeys	bmcaster/digest.pb.go	/^func (m *NewDigest) GetKeys() []int64 {$/;"	f
+GetKeys	bmcaster/store.go	/^func (store *msgstore) GetKeys() (ranges []keyrange, keys []int64) {$/;"	d
+GetKeys	bmcaster/store.go	/^func (store *msgstore) GetKeys() (ranges []keyrange, keys []int64) {$/;"	f
+GetLLimit	bmcaster/digest.pb.go	/^func (m *Range) GetLLimit() int64 {$/;"	d
+GetLLimit	bmcaster/digest.pb.go	/^func (m *Range) GetLLimit() int64 {$/;"	f
+GetMsgId	bmcaster/bimodal.pb.go	/^func (m *Header) GetMsgId() int64 {$/;"	d
+GetMsgId	bmcaster/bimodal.pb.go	/^func (m *Header) GetMsgId() int64 {$/;"	f
+GetMsgId	multicaster/bimodal.pb.go	/^func (m *Header) GetMsgId() int64 {$/;"	d
+GetMsgId	multicaster/bimodal.pb.go	/^func (m *Header) GetMsgId() int64 {$/;"	f
+GetMsgLength	bmcaster/bimodal.pb.go	/^func (m *Header) GetMsgLength() int32 {$/;"	d
+GetMsgLength	bmcaster/bimodal.pb.go	/^func (m *Header) GetMsgLength() int32 {$/;"	f
+GetMsgLength	multicaster/bimodal.pb.go	/^func (m *Header) GetMsgLength() int32 {$/;"	d
+GetMsgLength	multicaster/bimodal.pb.go	/^func (m *Header) GetMsgLength() int32 {$/;"	f
+GetMsgType	bmcaster/bimodal.pb.go	/^func (m *Header) GetMsgType() Header_MsgType {$/;"	d
+GetMsgType	bmcaster/bimodal.pb.go	/^func (m *Header) GetMsgType() Header_MsgType {$/;"	f
+GetMsgType	multicaster/bimodal.pb.go	/^func (m *Header) GetMsgType() Header_MsgType {$/;"	d
+GetMsgType	multicaster/bimodal.pb.go	/^func (m *Header) GetMsgType() Header_MsgType {$/;"	f
+GetOther	bmcaster/bimodal.pb.go	/^func (m *NewMsg) GetOther() *OtherMsg {$/;"	d
+GetOther	bmcaster/bimodal.pb.go	/^func (m *NewMsg) GetOther() *OtherMsg {$/;"	f
+GetOther	multicaster/bimodal.pb.go	/^func (m *NewMsg) GetOther() *OtherMsg {$/;"	d
+GetOther	multicaster/bimodal.pb.go	/^func (m *NewMsg) GetOther() *OtherMsg {$/;"	f
+GetPurge	bmcaster/bimodal.pb.go	/^func (m *NewMsg) GetPurge() *PurgeMsg {$/;"	d
+GetPurge	bmcaster/bimodal.pb.go	/^func (m *NewMsg) GetPurge() *PurgeMsg {$/;"	f
+GetPurge	multicaster/bimodal.pb.go	/^func (m *NewMsg) GetPurge() *PurgeMsg {$/;"	d
+GetPurge	multicaster/bimodal.pb.go	/^func (m *NewMsg) GetPurge() *PurgeMsg {$/;"	f
+GetRanges	bmcaster/digest.pb.go	/^func (m *NewDigest) GetRanges() []*Range {$/;"	d
+GetRanges	bmcaster/digest.pb.go	/^func (m *NewDigest) GetRanges() []*Range {$/;"	f
+GetULimit	bmcaster/digest.pb.go	/^func (m *Range) GetULimit() int64 {$/;"	d
+GetULimit	bmcaster/digest.pb.go	/^func (m *Range) GetULimit() int64 {$/;"	f
+Header	bmcaster/bimodal.pb.go	/^type Header struct {$/;"	d
+Header	bmcaster/bimodal.pb.go	/^type Header struct {$/;"	t
+Header	multicaster/bimodal.pb.go	/^type Header struct {$/;"	d
+Header	multicaster/bimodal.pb.go	/^type Header struct {$/;"	t
+Header_CONFIG	bmcaster/bimodal.pb.go	/^	Header_CONFIG  Header_MsgType = 1$/;"	c
+Header_CONFIG	multicaster/bimodal.pb.go	/^	Header_CONFIG  Header_MsgType = 1$/;"	c
+Header_MsgType	bmcaster/bimodal.pb.go	/^type Header_MsgType int32$/;"	d
+Header_MsgType	bmcaster/bimodal.pb.go	/^type Header_MsgType int32$/;"	t
+Header_MsgType	multicaster/bimodal.pb.go	/^type Header_MsgType int32$/;"	d
+Header_MsgType	multicaster/bimodal.pb.go	/^type Header_MsgType int32$/;"	t
+Header_MsgType_name	bmcaster/bimodal.pb.go	/^var Header_MsgType_name = map[int32]string{$/;"	d
+Header_MsgType_name	bmcaster/bimodal.pb.go	/^var Header_MsgType_name = map[int32]string{$/;"	v
+Header_MsgType_name	multicaster/bimodal.pb.go	/^var Header_MsgType_name = map[int32]string{$/;"	d
+Header_MsgType_name	multicaster/bimodal.pb.go	/^var Header_MsgType_name = map[int32]string{$/;"	v
+Header_MsgType_value	bmcaster/bimodal.pb.go	/^var Header_MsgType_value = map[string]int32{$/;"	d
+Header_MsgType_value	bmcaster/bimodal.pb.go	/^var Header_MsgType_value = map[string]int32{$/;"	v
+Header_MsgType_value	multicaster/bimodal.pb.go	/^var Header_MsgType_value = map[string]int32{$/;"	d
+Header_MsgType_value	multicaster/bimodal.pb.go	/^var Header_MsgType_value = map[string]int32{$/;"	v
+Header_OTHER	bmcaster/bimodal.pb.go	/^	Header_OTHER   Header_MsgType = 3$/;"	c
+Header_OTHER	multicaster/bimodal.pb.go	/^	Header_OTHER   Header_MsgType = 3$/;"	c
+Header_PURGE	bmcaster/bimodal.pb.go	/^	Header_PURGE   Header_MsgType = 2$/;"	c
+Header_PURGE	multicaster/bimodal.pb.go	/^	Header_PURGE   Header_MsgType = 2$/;"	c
+Header_UNKNOWN	bmcaster/bimodal.pb.go	/^	Header_UNKNOWN Header_MsgType = 0$/;"	c
+Header_UNKNOWN	multicaster/bimodal.pb.go	/^	Header_UNKNOWN Header_MsgType = 0$/;"	c
+HttpConnectTO	bmcaster/bmcaster.go	/^	HttpConnectTO   = time.Duration(1)    \/\/Second$/;"	c
+HttpReadWriteTO	bmcaster/bmcaster.go	/^	HttpReadWriteTO = time.Duration(2)    \/\/Second$/;"	c
+INFO	up.sh	/^INFO(){$/;"	f
+Len	bmcaster/store.go	/^func (a int64arr) Len() int           { return len(a) }$/;"	d
+Len	bmcaster/store.go	/^func (a int64arr) Len() int           { return len(a) }$/;"	f
+Less	bmcaster/store.go	/^func (a int64arr) Less(i, j int) bool { return a[i] < a[j] }$/;"	d
+Less	bmcaster/store.go	/^func (a int64arr) Less(i, j int) bool { return a[i] < a[j] }$/;"	f
+Listener	bmcaster/listener.go	/^func Listener(store *msgstore) {$/;"	d
+Listener	bmcaster/listener.go	/^func Listener(store *msgstore) {$/;"	f
+MaxDatagramSize	bmcaster/bmcaster.go	/^	MaxDatagramSize = 65507$/;"	c
+Memberlist	bmcaster/bmcaster.go	/^	Memberlist      = "n1,n2,n3,n4,n5"$/;"	c
+Msg	bmcaster/listener.go	/^type Msg struct {$/;"	d
+Msg	bmcaster/listener.go	/^type Msg struct {$/;"	t
+Msg	multicaster/multicaster.go	/^type Msg struct {$/;"	d
+Msg	multicaster/multicaster.go	/^type Msg struct {$/;"	t
+MsgServer	bmcaster/fetcher.go	/^func MsgServer() {$/;"	d
+MsgServer	bmcaster/fetcher.go	/^func MsgServer() {$/;"	f
+NewDigest	bmcaster/digest.pb.go	/^type NewDigest struct {$/;"	d
+NewDigest	bmcaster/digest.pb.go	/^type NewDigest struct {$/;"	t
+NewMsg	bmcaster/bimodal.pb.go	/^type NewMsg struct {$/;"	d
+NewMsg	bmcaster/bimodal.pb.go	/^type NewMsg struct {$/;"	t
+NewMsg	multicaster/bimodal.pb.go	/^type NewMsg struct {$/;"	d
+NewMsg	multicaster/bimodal.pb.go	/^type NewMsg struct {$/;"	t
+NewTimeoutClient	bmcaster/fetcher.go	/^func NewTimeoutClient(connectTimeout time.Duration, readWriteTimeout time.Duration) *http.Client {$/;"	d
+NewTimeoutClient	bmcaster/fetcher.go	/^func NewTimeoutClient(connectTimeout time.Duration, readWriteTimeout time.Duration) *http.Client {$/;"	f
+OtherMsg	bmcaster/bimodal.pb.go	/^type OtherMsg struct {$/;"	d
+OtherMsg	bmcaster/bimodal.pb.go	/^type OtherMsg struct {$/;"	t
+OtherMsg	multicaster/bimodal.pb.go	/^type OtherMsg struct {$/;"	d
+OtherMsg	multicaster/bimodal.pb.go	/^type OtherMsg struct {$/;"	t
+ProtoMessage	bmcaster/bimodal.pb.go	/^func (*ConfigMsg) ProtoMessage()    {}$/;"	d
+ProtoMessage	bmcaster/bimodal.pb.go	/^func (*ConfigMsg) ProtoMessage()    {}$/;"	f
+ProtoMessage	bmcaster/bimodal.pb.go	/^func (*Header) ProtoMessage()    {}$/;"	d
+ProtoMessage	bmcaster/bimodal.pb.go	/^func (*Header) ProtoMessage()    {}$/;"	f
+ProtoMessage	bmcaster/bimodal.pb.go	/^func (*NewMsg) ProtoMessage()    {}$/;"	d
+ProtoMessage	bmcaster/bimodal.pb.go	/^func (*NewMsg) ProtoMessage()    {}$/;"	f
+ProtoMessage	bmcaster/bimodal.pb.go	/^func (*OtherMsg) ProtoMessage()    {}$/;"	d
+ProtoMessage	bmcaster/bimodal.pb.go	/^func (*OtherMsg) ProtoMessage()    {}$/;"	f
+ProtoMessage	bmcaster/bimodal.pb.go	/^func (*PurgeMsg) ProtoMessage()    {}$/;"	d
+ProtoMessage	bmcaster/bimodal.pb.go	/^func (*PurgeMsg) ProtoMessage()    {}$/;"	f
+ProtoMessage	bmcaster/digest.pb.go	/^func (*NewDigest) ProtoMessage()    {}$/;"	d
+ProtoMessage	bmcaster/digest.pb.go	/^func (*NewDigest) ProtoMessage()    {}$/;"	f
+ProtoMessage	bmcaster/digest.pb.go	/^func (*Range) ProtoMessage()    {}$/;"	d
+ProtoMessage	bmcaster/digest.pb.go	/^func (*Range) ProtoMessage()    {}$/;"	f
+ProtoMessage	multicaster/bimodal.pb.go	/^func (*ConfigMsg) ProtoMessage()    {}$/;"	d
+ProtoMessage	multicaster/bimodal.pb.go	/^func (*ConfigMsg) ProtoMessage()    {}$/;"	f
+ProtoMessage	multicaster/bimodal.pb.go	/^func (*Header) ProtoMessage()    {}$/;"	d
+ProtoMessage	multicaster/bimodal.pb.go	/^func (*Header) ProtoMessage()    {}$/;"	f
+ProtoMessage	multicaster/bimodal.pb.go	/^func (*NewMsg) ProtoMessage()    {}$/;"	d
+ProtoMessage	multicaster/bimodal.pb.go	/^func (*NewMsg) ProtoMessage()    {}$/;"	f
+ProtoMessage	multicaster/bimodal.pb.go	/^func (*OtherMsg) ProtoMessage()    {}$/;"	d
+ProtoMessage	multicaster/bimodal.pb.go	/^func (*OtherMsg) ProtoMessage()    {}$/;"	f
+ProtoMessage	multicaster/bimodal.pb.go	/^func (*PurgeMsg) ProtoMessage()    {}$/;"	d
+ProtoMessage	multicaster/bimodal.pb.go	/^func (*PurgeMsg) ProtoMessage()    {}$/;"	f
+PurgeMsg	bmcaster/bimodal.pb.go	/^type PurgeMsg struct {$/;"	d
+PurgeMsg	bmcaster/bimodal.pb.go	/^type PurgeMsg struct {$/;"	t
+PurgeMsg	multicaster/bimodal.pb.go	/^type PurgeMsg struct {$/;"	d
+PurgeMsg	multicaster/bimodal.pb.go	/^type PurgeMsg struct {$/;"	t
+RandStringBytesMaskImprSrc	multicaster/multicaster.go	/^func RandStringBytesMaskImprSrc(n int32) string {$/;"	d
+RandStringBytesMaskImprSrc	multicaster/multicaster.go	/^func RandStringBytesMaskImprSrc(n int32) string {$/;"	f
+RandomMsgGen	multicaster/multicaster.go	/^func RandomMsgGen(srvAddr string, interval time.Duration, maxLength int32) {$/;"	d
+RandomMsgGen	multicaster/multicaster.go	/^func RandomMsgGen(srvAddr string, interval time.Duration, maxLength int32) {$/;"	f
+Range	bmcaster/digest.pb.go	/^type Range struct {$/;"	d
+Range	bmcaster/digest.pb.go	/^type Range struct {$/;"	t
+Reset	bmcaster/bimodal.pb.go	/^func (m *ConfigMsg) Reset()         { *m = ConfigMsg{} }$/;"	d
+Reset	bmcaster/bimodal.pb.go	/^func (m *ConfigMsg) Reset()         { *m = ConfigMsg{} }$/;"	f
+Reset	bmcaster/bimodal.pb.go	/^func (m *Header) Reset()         { *m = Header{} }$/;"	d
+Reset	bmcaster/bimodal.pb.go	/^func (m *Header) Reset()         { *m = Header{} }$/;"	f
+Reset	bmcaster/bimodal.pb.go	/^func (m *NewMsg) Reset()         { *m = NewMsg{} }$/;"	d
+Reset	bmcaster/bimodal.pb.go	/^func (m *NewMsg) Reset()         { *m = NewMsg{} }$/;"	f
+Reset	bmcaster/bimodal.pb.go	/^func (m *OtherMsg) Reset()         { *m = OtherMsg{} }$/;"	d
+Reset	bmcaster/bimodal.pb.go	/^func (m *OtherMsg) Reset()         { *m = OtherMsg{} }$/;"	f
+Reset	bmcaster/bimodal.pb.go	/^func (m *PurgeMsg) Reset()         { *m = PurgeMsg{} }$/;"	d
+Reset	bmcaster/bimodal.pb.go	/^func (m *PurgeMsg) Reset()         { *m = PurgeMsg{} }$/;"	f
+Reset	bmcaster/digest.pb.go	/^func (m *NewDigest) Reset()         { *m = NewDigest{} }$/;"	d
+Reset	bmcaster/digest.pb.go	/^func (m *NewDigest) Reset()         { *m = NewDigest{} }$/;"	f
+Reset	bmcaster/digest.pb.go	/^func (m *Range) Reset()         { *m = Range{} }$/;"	d
+Reset	bmcaster/digest.pb.go	/^func (m *Range) Reset()         { *m = Range{} }$/;"	f
+Reset	multicaster/bimodal.pb.go	/^func (m *ConfigMsg) Reset()         { *m = ConfigMsg{} }$/;"	d
+Reset	multicaster/bimodal.pb.go	/^func (m *ConfigMsg) Reset()         { *m = ConfigMsg{} }$/;"	f
+Reset	multicaster/bimodal.pb.go	/^func (m *Header) Reset()         { *m = Header{} }$/;"	d
+Reset	multicaster/bimodal.pb.go	/^func (m *Header) Reset()         { *m = Header{} }$/;"	f
+Reset	multicaster/bimodal.pb.go	/^func (m *NewMsg) Reset()         { *m = NewMsg{} }$/;"	d
+Reset	multicaster/bimodal.pb.go	/^func (m *NewMsg) Reset()         { *m = NewMsg{} }$/;"	f
+Reset	multicaster/bimodal.pb.go	/^func (m *OtherMsg) Reset()         { *m = OtherMsg{} }$/;"	d
+Reset	multicaster/bimodal.pb.go	/^func (m *OtherMsg) Reset()         { *m = OtherMsg{} }$/;"	f
+Reset	multicaster/bimodal.pb.go	/^func (m *PurgeMsg) Reset()         { *m = PurgeMsg{} }$/;"	d
+Reset	multicaster/bimodal.pb.go	/^func (m *PurgeMsg) Reset()         { *m = PurgeMsg{} }$/;"	f
+SaveAsFile	bmcaster/diskstore.go	/^func SaveAsFile(m *NewMsg, dir string) {$/;"	d
+SaveAsFile	bmcaster/diskstore.go	/^func SaveAsFile(m *NewMsg, dir string) {$/;"	f
+SrvAddr	bmcaster/bmcaster.go	/^	SrvAddr         = "224.0.0.1:9999"$/;"	c
+StoreDir	bmcaster/bmcaster.go	/^	StoreDir        = ".\/bmstore\/"$/;"	c
+String	bmcaster/bimodal.pb.go	/^func (m *ConfigMsg) String() string { return proto.CompactTextString(m) }$/;"	d
+String	bmcaster/bimodal.pb.go	/^func (m *ConfigMsg) String() string { return proto.CompactTextString(m) }$/;"	f
+String	bmcaster/bimodal.pb.go	/^func (m *Header) String() string { return proto.CompactTextString(m) }$/;"	d
+String	bmcaster/bimodal.pb.go	/^func (m *Header) String() string { return proto.CompactTextString(m) }$/;"	f
+String	bmcaster/bimodal.pb.go	/^func (m *NewMsg) String() string { return proto.CompactTextString(m) }$/;"	d
+String	bmcaster/bimodal.pb.go	/^func (m *NewMsg) String() string { return proto.CompactTextString(m) }$/;"	f
+String	bmcaster/bimodal.pb.go	/^func (m *OtherMsg) String() string { return proto.CompactTextString(m) }$/;"	d
+String	bmcaster/bimodal.pb.go	/^func (m *OtherMsg) String() string { return proto.CompactTextString(m) }$/;"	f
+String	bmcaster/bimodal.pb.go	/^func (m *PurgeMsg) String() string { return proto.CompactTextString(m) }$/;"	d
+String	bmcaster/bimodal.pb.go	/^func (m *PurgeMsg) String() string { return proto.CompactTextString(m) }$/;"	f
+String	bmcaster/bimodal.pb.go	/^func (x Header_MsgType) String() string {$/;"	d
+String	bmcaster/bimodal.pb.go	/^func (x Header_MsgType) String() string {$/;"	f
+String	bmcaster/digest.pb.go	/^func (m *NewDigest) String() string { return proto.CompactTextString(m) }$/;"	d
+String	bmcaster/digest.pb.go	/^func (m *NewDigest) String() string { return proto.CompactTextString(m) }$/;"	f
+String	bmcaster/digest.pb.go	/^func (m *Range) String() string { return proto.CompactTextString(m) }$/;"	d
+String	bmcaster/digest.pb.go	/^func (m *Range) String() string { return proto.CompactTextString(m) }$/;"	f
+String	multicaster/bimodal.pb.go	/^func (m *ConfigMsg) String() string { return proto.CompactTextString(m) }$/;"	d
+String	multicaster/bimodal.pb.go	/^func (m *ConfigMsg) String() string { return proto.CompactTextString(m) }$/;"	f
+String	multicaster/bimodal.pb.go	/^func (m *Header) String() string { return proto.CompactTextString(m) }$/;"	d
+String	multicaster/bimodal.pb.go	/^func (m *Header) String() string { return proto.CompactTextString(m) }$/;"	f
+String	multicaster/bimodal.pb.go	/^func (m *NewMsg) String() string { return proto.CompactTextString(m) }$/;"	d
+String	multicaster/bimodal.pb.go	/^func (m *NewMsg) String() string { return proto.CompactTextString(m) }$/;"	f
+String	multicaster/bimodal.pb.go	/^func (m *OtherMsg) String() string { return proto.CompactTextString(m) }$/;"	d
+String	multicaster/bimodal.pb.go	/^func (m *OtherMsg) String() string { return proto.CompactTextString(m) }$/;"	f
+String	multicaster/bimodal.pb.go	/^func (m *PurgeMsg) String() string { return proto.CompactTextString(m) }$/;"	d
+String	multicaster/bimodal.pb.go	/^func (m *PurgeMsg) String() string { return proto.CompactTextString(m) }$/;"	f
+String	multicaster/bimodal.pb.go	/^func (x Header_MsgType) String() string {$/;"	d
+String	multicaster/bimodal.pb.go	/^func (x Header_MsgType) String() string {$/;"	f
+Swap	bmcaster/store.go	/^func (a int64arr) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }$/;"	d
+Swap	bmcaster/store.go	/^func (a int64arr) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }$/;"	f
+TimeoutDialer	bmcaster/fetcher.go	/^func TimeoutDialer(cTimeout time.Duration, rwTimeout time.Duration) func(net, addr string) (c net.Conn, err error) {$/;"	d
+TimeoutDialer	bmcaster/fetcher.go	/^func TimeoutDialer(cTimeout time.Duration, rwTimeout time.Duration) func(net, addr string) (c net.Conn, err error) {$/;"	f
+UnmarshalJSON	bmcaster/bimodal.pb.go	/^func (x *Header_MsgType) UnmarshalJSON(data []byte) error {$/;"	d
+UnmarshalJSON	bmcaster/bimodal.pb.go	/^func (x *Header_MsgType) UnmarshalJSON(data []byte) error {$/;"	f
+UnmarshalJSON	multicaster/bimodal.pb.go	/^func (x *Header_MsgType) UnmarshalJSON(data []byte) error {$/;"	d
+UnmarshalJSON	multicaster/bimodal.pb.go	/^func (x *Header_MsgType) UnmarshalJSON(data []byte) error {$/;"	f
+WARNING	up.sh	/^WARNING(){$/;"	f
+_	bmcaster/bimodal.pb.go	/^var _ = math.Inf$/;"	v
+_	bmcaster/bimodal.pb.go	/^var _ = proto.Marshal$/;"	v
+_	bmcaster/digest.pb.go	/^var _ = math.Inf$/;"	v
+_	bmcaster/digest.pb.go	/^var _ = proto.Marshal$/;"	v
+_	multicaster/bimodal.pb.go	/^var _ = math.Inf$/;"	v
+_	multicaster/bimodal.pb.go	/^var _ = proto.Marshal$/;"	v
+digestmsg	bmcaster/digestmgr.go	/^			var digestmsg Digest$/;"	d
+digestmsg	bmcaster/digestmgr.go	/^		var digestmsg Digest$/;"	d
+exists	up.sh	/^exists() {$/;"	f
+id	multicaster/multicaster.go	/^	var id int64 = 1$/;"	d
+init	bmcaster/bimodal.pb.go	/^func init() {$/;"	d
+init	bmcaster/bimodal.pb.go	/^func init() {$/;"	f
+init	bmcaster/digest.pb.go	/^func init() {$/;"	d
+init	bmcaster/digest.pb.go	/^func init() {$/;"	f
+init	multicaster/bimodal.pb.go	/^func init() {$/;"	d
+init	multicaster/bimodal.pb.go	/^func init() {$/;"	f
+int64arr	bmcaster/store.go	/^type int64arr []int64$/;"	d
+int64arr	bmcaster/store.go	/^type int64arr []int64$/;"	t
+interval	multicaster/multicaster.go	/^	interval        = time.Duration(1000) \/\/Millisecond$/;"	c
+keyrange	bmcaster/store.go	/^type keyrange struct {$/;"	d
+keyrange	bmcaster/store.go	/^type keyrange struct {$/;"	t
+letterBytes	multicaster/multicaster.go	/^const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"$/;"	c
+letterIdxBits	multicaster/multicaster.go	/^	letterIdxBits = 6                    \/\/ 6 bits to represent a letter index$/;"	c
+letterIdxMask	multicaster/multicaster.go	/^	letterIdxMask = 1<<letterIdxBits - 1 \/\/ All 1-bits, as many as letterIdxBits$/;"	c
+letterIdxMax	multicaster/multicaster.go	/^	letterIdxMax  = 63 \/ letterIdxBits   \/\/ # of letter indices fitting in 63 bits$/;"	c
+main	bmcaster/bimodal.pb.go	/^package main$/;"	p
+main	bmcaster/bmcaster.go	/^func main() {$/;"	d
+main	bmcaster/bmcaster.go	/^func main() {$/;"	f
+main	bmcaster/bmcaster.go	/^package main$/;"	p
+main	bmcaster/digest.pb.go	/^package main$/;"	p
+main	bmcaster/digestmgr.go	/^package main$/;"	p
+main	bmcaster/diskstore.go	/^package main$/;"	p
+main	bmcaster/fetcher.go	/^package main$/;"	p
+main	bmcaster/listener.go	/^package main$/;"	p
+main	bmcaster/store.go	/^package main$/;"	p
+main	multicaster/bimodal.pb.go	/^package main$/;"	p
+main	multicaster/multicaster.go	/^func main() {$/;"	d
+main	multicaster/multicaster.go	/^func main() {$/;"	f
+main	multicaster/multicaster.go	/^package main$/;"	p
+makeProtobuf	bmcaster/digestmgr.go	/^func (m Digest) makeProtobuf() *NewDigest {$/;"	d
+makeProtobuf	bmcaster/digestmgr.go	/^func (m Digest) makeProtobuf() *NewDigest {$/;"	f
+maxDatagramSize	multicaster/multicaster.go	/^	maxDatagramSize = 8192$/;"	c
+maxLength	multicaster/multicaster.go	/^	maxLength       = int32(100)          \/\/Length of msg$/;"	c
+msgstore	bmcaster/store.go	/^type msgstore struct {$/;"	d
+msgstore	bmcaster/store.go	/^type msgstore struct {$/;"	t
+pkeyrange	bmcaster/digestmgr.go	/^				var pkeyrange keyrange$/;"	d
+removeRange	bmcaster/store.go	/^func removeRange(s []keyrange, i int) []keyrange {$/;"	d
+removeRange	bmcaster/store.go	/^func removeRange(s []keyrange, i int) []keyrange {$/;"	f
+src	multicaster/multicaster.go	/^var src = rand.NewSource(time.Now().UnixNano())$/;"	d
+src	multicaster/multicaster.go	/^var src = rand.NewSource(time.Now().UnixNano())$/;"	v
+srvAddr	multicaster/multicaster.go	/^	srvAddr         = "224.0.0.1:9999"$/;"	c
+store	bmcaster/bmcaster.go	/^	var store msgstore$/;"	d
+wanted	bmcaster/bmcaster.go	/^	var wanted wantedstore$/;"	d
+wantedstore	bmcaster/store.go	/^type wantedstore struct {$/;"	d
+wantedstore	bmcaster/store.go	/^type wantedstore struct {$/;"	t

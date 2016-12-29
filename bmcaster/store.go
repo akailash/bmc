@@ -1,6 +1,8 @@
 package main
 
 import (
+	//	"log"
+	//	"runtime"
 	"sort"
 	"sync"
 )
@@ -19,9 +21,9 @@ type wantedstore struct {
 	cache map[int64][]string
 }
 
-func (store *msgstore) Add(m *NewMsg) {
+func (store *msgstore) Add(id int64) {
 	store.Lock()
-	store.keys = append(store.keys, m.GetHead().GetMsgId())
+	store.keys = append(store.keys, id)
 	store.Unlock()
 }
 func (store *msgstore) GetKeys() (ranges []keyrange, keys []int64) {
@@ -38,13 +40,13 @@ func (store *msgstore) DiffKeys(ranges []keyrange, keys []int64) (unknown []int6
 	store.RLock()
 	for _, r := range ranges {
 		for i := r.Llimit; i <= r.Ulimit; i++ {
-			if !CheckJsonDisk(i, StoreDir) {
+			if !CheckMsgDisk(i, StoreDir) {
 				unknown = append(unknown, i)
 			}
 		}
 	}
 	for _, k := range keys {
-		if !CheckJsonDisk(k, StoreDir) {
+		if !CheckMsgDisk(k, StoreDir) {
 			unknown = append(unknown, k)
 		}
 	}
@@ -94,6 +96,11 @@ func (store *msgstore) Clean() {
 	//This lets Go GC collect the memory from the slice
 	store.keys = nil
 	store.Unlock()
+	//runtime.Gosched()
+	//runtime.GC()
+	//var m runtime.MemStats
+	//runtime.ReadMemStats(&m)
+	//log.Printf("%+v\n", m)
 }
 
 func (wanted *wantedstore) Add(keys []int64, host string) {

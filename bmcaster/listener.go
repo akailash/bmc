@@ -32,10 +32,11 @@ func Listener(store *msgstore) {
 		if err != nil {
 			log.Fatal("protobuf Unmarshal failed", err)
 		}
-		log.Println("Received message", m.Head.GetMsgId())
+		id := m.GetHead().GetMsgId()
+		log.Println("Received message", id)
 		//TODO check whether value already exists in store?
-		store.Add(m)
-		SaveAsFile(m, StoreDir)
+		store.Add(id)
+		SaveAsFile(id, b[:n], StoreDir)
 		m.Reset()
 	}
 }

@@ -53,8 +53,8 @@ func main() {
 	// events when members join or leave.
 	//Init maps in store
 	wanted.cache = make(map[int64][]string)
-	go MsgServer()
-	go Fetcher(&store, &wanted)
+	go TcpMsgServer()
+	go TcpFetcher(&store, &wanted)
 	go Digestrx(&store, &wanted)
 	go Listener(&store)
 	go Digesttx(&store, list)
