@@ -2,11 +2,9 @@ package main
 
 import (
 	"github.com/golang/protobuf/proto"
-	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
-	"strconv"
 	"time"
 )
 
@@ -35,25 +33,31 @@ func sendMsgToClient(conn net.Conn) {
 	//Close the connection when the function exits
 	defer conn.Close()
 	data := make([]byte, MaxDatagramSize)
-	//Read the data waiting on the connection and put it in the data buffer
-	n, err := conn.Read(data)
-	if err != nil {
-		log.Println(err)
-		return
+	var repeat int32 = 1
+	for {
+		//Read the data waiting on the connection and put it in the data buffer
+
+		n, err := conn.Read(data)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		protodata := new(Header)
+		err = proto.Unmarshal(data[0:n], protodata)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		b, err := GetMsgFromDisk(protodata.GetMsgId(), StoreDir)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		n, err = conn.Write(b)
+		log.Println("Sent", n, "bytes")
+		repeat = protodata.GetMsgLength()
+		log.Println("Repeat = ", repeat)
 	}
-	protodata := new(Header)
-	err = proto.Unmarshal(data[0:n], protodata)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	b, err := GetMsgFromDisk(protodata.GetMsgId(), StoreDir)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	n, err = conn.Write(b)
-	log.Println("Sent", n, "bytes")
 }
 
 func TcpMsgServer() {
@@ -73,110 +77,55 @@ func TcpMsgServer() {
 
 }
 
-func TcpFetcher(store *msgstore, wanted *wantedstore) {
+func TcpFetcher(store *msgstore, keys []int64, src string) {
 	log.Println("Starting TcpFetcher")
-	for {
-		time.Sleep(FetchDuration * time.Millisecond)
-		//TODO should use reader lock on wanted but since writer lock is acquired within the loop its not done
-		for k, srcs := range wanted.cache {
+	if len(keys) != 0 {
+		conn, err := net.Dial("tcp", src+FetcherPort)
+		if err != nil {
+			log.Println("Error fetching from", src, err)
+			return
+		}
+		defer conn.Close()
+
+		for i, k := range keys {
 			log.Println("Fetcher fetching MsgID:", k)
+			if CheckMsgDisk(k, StoreDir) {
+				log.Println(k, "exists on disk now")
+				continue
+			}
 			head := new(Header)
 			head.MsgId = proto.Int64(k)
-			head.MsgLength = proto.Int32(0)
+			head.MsgLength = proto.Int32(int32(len(keys) - i - 1))
 			head.MsgType = Header_CONFIG.Enum()
-			for _, src := range srcs {
-				b, err := proto.Marshal(head)
-				if err != nil {
-					log.Println(err)
-					break
-				}
-				log.Println("Fetcher fetching MsgID:", k, "from", src)
-
-				conn, err := net.Dial("tcp", src+FetcherPort)
-				if err != nil {
-					log.Println("Error fetching ", k, "from", src, err)
-					continue
-				}
-				n, err := conn.Write(b)
-				if err != nil {
-					log.Println(err)
-					conn.Close()
-					continue
-				}
-				log.Println("Wrote header ", n)
-				buf := make([]byte, MaxDatagramSize)
-				n, err = conn.Read(buf)
-				if err != nil {
-					log.Println(err)
-					conn.Close()
-					continue
-				}
-				log.Println("Read message ", n)
-				conn.Close()
-				m := new(NewMsg)
-				err = proto.Unmarshal(buf[:n], m)
-				if err != nil {
-					log.Println(err)
-					continue
-				}
-				log.Println("Downloaded message: ", m)
-				wanted.Delete(k)
-				store.Add(k)
-				SaveAsFile(k, b, StoreDir)
-				//Fetch next key
+			b, err := proto.Marshal(head)
+			if err != nil {
+				log.Println(err)
 				break
 			}
+			log.Println("Fetcher fetching MsgID:", k, "from", src)
 
-		}
-
-	}
-
-}
-
-func MsgServer() {
-	log.Println("Starting MsgServer")
-	//	http.HandleFunc("/", JsonResponse)
-	http.Handle("/", http.FileServer(http.Dir(StoreDir)))
-	log.Fatal(http.ListenAndServe(FetcherPort, nil))
-}
-
-func Fetcher(store *msgstore, wanted *wantedstore) {
-	log.Println("Starting Fetcher")
-	client := NewTimeoutClient(HttpConnectTO*time.Second, HttpReadWriteTO*time.Second)
-	for {
-		time.Sleep(FetchDuration * time.Millisecond)
-		//TODO should use reader lock on wanted but since writer lock is acquired within the loop its not done
-		for k, srcs := range wanted.cache {
-			log.Println("Fetcher fetching MsgID:", k)
-			for _, src := range srcs {
-				log.Println("Fetcher fetching MsgID:", k, "from", src)
-
-				resp, err := client.Get("http://" + src + FetcherPort + "/" + strconv.FormatInt(k, 10))
-				if err != nil {
-					log.Println("Error fetching ", k, "from", src, err)
-					continue
-				}
-				b, err := ioutil.ReadAll(resp.Body)
-				if err != nil {
-					log.Println(err)
-					resp.Body.Close()
-					continue
-				}
-				resp.Body.Close()
-				m := new(NewMsg)
-				err = proto.Unmarshal(b, m)
-				if err != nil {
-					log.Println(err)
-					continue
-				}
-				log.Println("Downloaded message: ", m)
-				wanted.Delete(k)
-				store.Add(k)
-				SaveAsFile(k, b, StoreDir)
-				//Fetch next key
-				break
+			n, err := conn.Write(b)
+			if err != nil {
+				log.Println(err)
+				return
 			}
-
+			log.Println("Wrote header ", n)
+			buf := make([]byte, MaxDatagramSize)
+			n, err = conn.Read(buf)
+			if err != nil {
+				log.Println(err)
+				return
+			}
+			log.Println("Read message ", n)
+			m := new(NewMsg)
+			err = proto.Unmarshal(buf[:n], m)
+			if err != nil {
+				log.Println(err)
+				return
+			}
+			log.Println("Downloaded message: ", m)
+			store.Add(k)
+			SaveAsFile(k, b, StoreDir)
 		}
 
 	}

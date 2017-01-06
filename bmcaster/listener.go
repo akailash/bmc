@@ -3,7 +3,9 @@ package main
 import (
 	"github.com/golang/protobuf/proto"
 	"log"
+	"math/rand"
 	"net"
+	"time"
 )
 
 type Msg struct {
@@ -13,6 +15,7 @@ type Msg struct {
 
 func Listener(store *msgstore) {
 	log.Println("Starting Listener")
+	rand.Seed(time.Now().UnixNano())
 	addr, err := net.ResolveUDPAddr("udp", SrvAddr)
 	if err != nil {
 		log.Fatal(err)
@@ -28,6 +31,10 @@ func Listener(store *msgstore) {
 			log.Fatal("ReadFromUDP failed:", err)
 		}
 		log.Println(n, "bytes read from", src)
+		//TODO remove later. For testing Fetcher only
+		if rand.Intn(10) < 2 {
+			continue
+		}
 		err = proto.Unmarshal(b[:n], m)
 		if err != nil {
 			log.Fatal("protobuf Unmarshal failed", err)

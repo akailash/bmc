@@ -20,6 +20,7 @@ exists() {
 exists docker || { ERROR "Please install docker (https://docs.docker.com/engine/installation/)"; exit 1; }
 exists docker-compose || { ERROR "Please install docker-compose (https://docs.docker.com/compose/install/)"; exit 1; }
 protoc --go_out=bmcaster bimodal.proto
+protoc --go_out=bmcaster digest.proto
 protoc --go_out=multicaster bimodal.proto
 docker-compose stop #Remove if you need other docker containers running
 docker-compose rm -f

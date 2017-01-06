@@ -1,7 +1,7 @@
 package main
 
 import (
-	//	"log"
+	"log"
 	//	"runtime"
 	"sort"
 	"sync"
@@ -13,45 +13,102 @@ type keyrange struct {
 type msgstore struct {
 	sync.RWMutex
 	ranges []keyrange
-	keys   []int64
 }
 
-type wantedstore struct {
-	sync.RWMutex
-	cache map[int64][]string
+type keyranges []keyrange
+
+func (slice keyranges) Len() int {
+	return len(slice)
 }
 
-func (store *msgstore) Add(id int64) {
+func (slice keyranges) Less(i, j int) bool {
+	return slice[i].Ulimit <= slice[j].Llimit
+}
+
+func (slice keyranges) Swap(i, j int) {
+	slice[i], slice[j] = slice[j], slice[i]
+}
+
+func (store *msgstore) Add(k int64) {
+	var added bool = false
 	store.Lock()
-	store.keys = append(store.keys, id)
+	for i, r := range store.ranges {
+		if k == r.Llimit-1 {
+			store.ranges[i].Llimit = k
+			added = true
+			break
+		} else if k == r.Ulimit+1 {
+			store.ranges[i].Ulimit = k
+			added = true
+			break
+		} else if k >= r.Llimit && k <= r.Ulimit {
+			added = true
+			log.Println(k, "added again to ", r)
+			break
+		}
+
+	}
+	if added == false {
+		//Create new range for this value
+		store.ranges = append(store.ranges, keyrange{k, k})
+	}
+	sort.Sort(keyranges(store.ranges))
+	for i, _ := range store.ranges {
+		if (i > 0) && (store.ranges[i-1].Ulimit == (store.ranges[i].Llimit - 1)) {
+			store.ranges[i].Llimit = store.ranges[i-1].Llimit
+			store.ranges = removeRange(store.ranges, i-1)
+			break
+		}
+	}
 	store.Unlock()
 }
-func (store *msgstore) GetKeys() (ranges []keyrange, keys []int64) {
+func (store *msgstore) GetKeys() (ranges []keyrange) {
 	store.RLock()
-	keys = make([]int64, len(store.keys))
-	copy(keys, store.keys)
 	ranges = make([]keyrange, len(store.ranges))
 	copy(ranges, store.ranges)
 	store.RUnlock()
-	return ranges, keys
+	return ranges
 }
-
-func (store *msgstore) DiffKeys(ranges []keyrange, keys []int64) (unknown []int64) {
+func (store *msgstore) IsEmpty() bool {
+	return len(store.ranges) == 0
+}
+func (store *msgstore) DiffKeys(ranges []keyrange) (unknown []int64) {
 	store.RLock()
-	for _, r := range ranges {
-		for i := r.Llimit; i <= r.Ulimit; i++ {
-			if !CheckMsgDisk(i, StoreDir) {
-				unknown = append(unknown, i)
+	log.Println("DiffKeys()", store.ranges, ranges)
+	for index, r := range ranges {
+		var matched bool = false
+		for _, sr := range store.ranges {
+			if r.Llimit >= sr.Llimit {
+				if r.Ulimit <= sr.Ulimit {
+					matched = true
+				} else {
+					if r.Llimit <= sr.Ulimit {
+						ranges[index].Llimit = sr.Ulimit + 1
+					}
+				}
+			} else {
+				if r.Ulimit >= sr.Llimit {
+					if r.Ulimit > sr.Ulimit {
+						//add earlier unknown keys and modify range
+						for i := ranges[index].Llimit; i < sr.Llimit; i++ {
+							unknown = append(unknown, i)
+						}
+						ranges[index].Llimit = sr.Ulimit + 1
+					} else {
+						ranges[index].Ulimit = sr.Llimit - 1
+					}
+				}
 			}
 		}
-	}
-	for _, k := range keys {
-		if !CheckMsgDisk(k, StoreDir) {
-			unknown = append(unknown, k)
+		if matched == true {
+			continue
+		}
+		for i := ranges[index].Llimit; i <= ranges[index].Ulimit; i++ {
+			unknown = append(unknown, i)
 		}
 	}
-
 	store.RUnlock()
+	log.Println("DiffKeys(): unknown", unknown)
 	return unknown
 }
 func removeRange(s []keyrange, i int) []keyrange {
@@ -59,61 +116,10 @@ func removeRange(s []keyrange, i int) []keyrange {
 	return s[:len(s)-1]
 }
 
-type int64arr []int64
-
-func (a int64arr) Len() int           { return len(a) }
-func (a int64arr) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
-func (a int64arr) Less(i, j int) bool { return a[i] < a[j] }
-
 func (store *msgstore) Clean() {
-	store.Lock()
-	sort.Sort(int64arr(store.keys))
-	for _, k := range store.keys {
-		added := false
-		for i, r := range store.ranges {
-			if k == r.Llimit-1 {
-				store.ranges[i].Llimit = k
-				added = true
-				break
-			} else if k == r.Ulimit+1 {
-				store.ranges[i].Ulimit = k
-				added = true
-				break
-			} else if k >= r.Llimit && k <= r.Ulimit {
-				added = true
-				break
-			}
-			if i > 1 && store.ranges[i-1].Ulimit == store.ranges[i].Llimit {
-				store.ranges[i-1].Ulimit = store.ranges[i].Ulimit
-				store.ranges = removeRange(store.ranges, i)
-			}
-		}
-		if added == false {
-			//Create new range for this value
-			store.ranges = append(store.ranges, keyrange{k, k})
-		}
-	}
-	//This lets Go GC collect the memory from the slice
-	store.keys = nil
-	store.Unlock()
 	//runtime.Gosched()
 	//runtime.GC()
 	//var m runtime.MemStats
 	//runtime.ReadMemStats(&m)
 	//log.Printf("%+v\n", m)
-}
-
-func (wanted *wantedstore) Add(keys []int64, host string) {
-	wanted.Lock()
-	for _, k := range keys {
-		wanted.cache[k] = append(wanted.cache[k], host)
-	}
-	wanted.Unlock()
-
-}
-func (wanted *wantedstore) Delete(k int64) {
-	wanted.Lock()
-	delete(wanted.cache, k)
-	wanted.Unlock()
-
 }
