@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/golang/protobuf/proto"
-	"github.com/hashicorp/serf/serf"
+	"github.com/hashicorp/memberlist"
 	"log"
 	"math/rand"
 	"net"
@@ -25,16 +25,16 @@ func (m Digest) makeProtobuf() *NewDigest {
 	return p
 }
 
-func Digesttx(store *msgstore, list *serf.Serf) {
+func Digesttx(store *msgstore, list *memberlist.Memberlist) {
 	log.Println("Starting Digesttx")
 	for {
 		time.Sleep(Digestinterval * time.Millisecond)
-		if !store.IsEmpty() && list.NumNodes() > 1 {
+		if !store.IsEmpty() && list.NumMembers() > 1 {
 			sendDigest(store, list)
 		}
 	}
 }
-func sendDigest(store *msgstore, list *serf.Serf) {
+func sendDigest(store *msgstore, list *memberlist.Memberlist) {
 	//Get list of keys in store
 	var digestmsg Digest
 	digestmsg.Ranges = store.GetKeys()
@@ -45,7 +45,7 @@ func sendDigest(store *msgstore, list *serf.Serf) {
 	}
 	//Get list of current members
 	nodes := list.Members()
-	self := list.LocalMember()
+	self := list.LocalNode()
 	//Send keys to random nodes in list
 	i := 0
 	numDigest := Digestratio * float32(len(nodes))

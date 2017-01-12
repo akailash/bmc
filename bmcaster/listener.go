@@ -32,7 +32,7 @@ func Listener(store *msgstore) {
 		}
 		log.Println(n, "bytes read from", src)
 		//TODO remove later. For testing Fetcher only
-		if rand.Intn(10) < 2 {
+		if rand.Intn(100) < MCastDropPercent {
 			continue
 		}
 		err = proto.Unmarshal(b[:n], m)
@@ -40,7 +40,7 @@ func Listener(store *msgstore) {
 			log.Fatal("protobuf Unmarshal failed", err)
 		}
 		id := m.GetHead().GetMsgId()
-		log.Println("Received message", id)
+		log.Println("CONFIG-UPDATE-RECEIVED { \"update_id\" =", id, "}")
 		//TODO check whether value already exists in store?
 		store.Add(id)
 		SaveAsFile(id, b[:n], StoreDir)

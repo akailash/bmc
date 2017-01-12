@@ -2,7 +2,7 @@ package main
 
 import (
 	"log"
-	//	"runtime"
+	"runtime"
 	"sort"
 	"sync"
 )
@@ -122,4 +122,5 @@ func (store *msgstore) Clean() {
 	//var m runtime.MemStats
 	//runtime.ReadMemStats(&m)
 	//log.Printf("%+v\n", m)
+	log.Println("NumGoroutine", runtime.NumGoroutine())
 }

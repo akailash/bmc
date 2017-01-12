@@ -1,25 +1,29 @@
 package main
 
 import (
-	"github.com/hashicorp/serf/serf"
+	"github.com/hashicorp/memberlist"
 	"log"
 	"net"
+	"net/http"
 	"strings"
 	"time"
 )
 
+//TODO remove when pprof is not needed
+import _ "net/http/pprof"
+
 const (
-	SrvAddr         = "224.0.0.1:9999"
-	MaxDatagramSize = 65507
-	Memberlist      = "n0,n1,n2,n3,n4,n5"
-	Digestinterval  = time.Duration(5000) //Millisecond
-	Digestratio     = 0.5                 //Ratio of nodes which should be send a digest msg
-	Digestport      = ":6000"
-	Cleantime       = time.Duration(30) //Second
-	StoreDir        = "./bmstore/"
-	FetcherPort     = ":3000"
-	HttpConnectTO   = time.Duration(1) //Second
-	HttpReadWriteTO = time.Duration(2) //Second
+	SrvAddr          = "224.0.0.1:9999"
+	MaxDatagramSize  = 65507
+	Memberlist       = "n0"
+	Digestinterval   = time.Duration(5000) //Millisecond
+	Digestratio      = 0.5                 //Ratio of nodes which should be send a digest msg
+	Digestport       = ":6000"
+	Cleantime        = time.Duration(30) //Second
+	StoreDir         = "./bmstore/"
+	LogDir           = "./configlog/"
+	FetcherPort      = ":3000"
+	MCastDropPercent = 20 //To simulate packet loss and trigger Fetcher
 )
 
 func externalIP() (string, error) {
@@ -60,25 +64,39 @@ func externalIP() (string, error) {
 }
 
 func main() {
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
+	log.SetFlags(log.LstdFlags | log.Lmicroseconds | log.Lshortfile)
+	/*	if _, err := os.Stat(LogDir); err != nil {
+			if os.IsNotExist(err) {
+				os.Mkdir(LogDir, 0755)
+			} else {
+				log.Fatalln(err)
+			}
+		}
+		f, err := os.OpenFile(LogDir+"config.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+		if err != nil {
+			log.Fatalf("error opening file: %v", err)
+		} else {
+			defer f.Close()
+			log.SetOutput(f)
+		}*/
 	log.Println("Starting BMcaster")
 	/* Create the initial memberlist from a safe configuration.
 	   Please reference the godoc for other default config types.
 	   http://godoc.org/github.com/hashicorp/memberlist#Config
 	*/
-	config := serf.DefaultConfig()
+	config := memberlist.DefaultLocalConfig()
 	ipadd, err := externalIP()
 	if err == nil && ipadd != "" {
-		config.MemberlistConfig.BindAddr = ipadd
+		config.BindAddr = ipadd
 	}
-	list, err := serf.Create(config)
+	list, err := memberlist.Create(config)
 	if err != nil {
 		log.Printf("Failed to create memberlist: " + err.Error())
 	}
 	var store msgstore
 
 	// Join an existing cluster by specifying at least one known member.
-	n, err := list.Join(strings.Split(Memberlist, ","), true)
+	n, err := list.Join(strings.Split(Memberlist, ","))
 	if err != nil {
 		log.Printf("Failed to join cluster: " + err.Error())
 	}
@@ -96,6 +114,12 @@ func main() {
 	go Digestrx(&store)
 	go Listener(&store)
 	go Digesttx(&store, list)
+
+	//TODO remove when pprof is not needed
+	go func() {
+		log.Fatal(http.ListenAndServe(":8080", http.DefaultServeMux))
+	}()
+
 	for {
 		//Clean up stores periodically
 		time.Sleep(Cleantime * time.Second)

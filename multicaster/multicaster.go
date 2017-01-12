@@ -49,7 +49,7 @@ func RandStringBytesMaskImprSrc(n int32) string {
 	return string(b)
 }
 
-func RandomMsgGen(srvAddr string, interval time.Duration, maxLength int32) {
+func RandomMsgGen(forever bool, repeat int64) {
 	log.Println("Generating Random Messages")
 	addr, err := net.ResolveUDPAddr("udp", srvAddr)
 	if err != nil {
@@ -62,7 +62,7 @@ func RandomMsgGen(srvAddr string, interval time.Duration, maxLength int32) {
 	}
 
 	var id int64 = 1
-	for {
+	for forever != (id <= repeat) {
 		m := &NewMsg{
 			Head: &Header{
 				MsgId:     proto.Int64(id),
@@ -92,6 +92,6 @@ func RandomMsgGen(srvAddr string, interval time.Duration, maxLength int32) {
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	log.Println("Starting Multicaster")
-	RandomMsgGen(srvAddr, interval, maxLength)
+	RandomMsgGen(true, 0)
 	fmt.Println("done")
 }

@@ -4,29 +4,7 @@ import (
 	"github.com/golang/protobuf/proto"
 	"log"
 	"net"
-	"net/http"
-	"time"
 )
-
-func TimeoutDialer(cTimeout time.Duration, rwTimeout time.Duration) func(net, addr string) (c net.Conn, err error) {
-	return func(netw, addr string) (net.Conn, error) {
-		conn, err := net.DialTimeout(netw, addr, cTimeout)
-		if err != nil {
-			return nil, err
-		}
-		conn.SetDeadline(time.Now().Add(rwTimeout))
-		return conn, nil
-	}
-}
-
-func NewTimeoutClient(connectTimeout time.Duration, readWriteTimeout time.Duration) *http.Client {
-
-	return &http.Client{
-		Transport: &http.Transport{
-			Dial: TimeoutDialer(connectTimeout, readWriteTimeout),
-		},
-	}
-}
 
 func sendMsgToClient(conn net.Conn) {
 	log.Println("Connection established")
@@ -34,9 +12,8 @@ func sendMsgToClient(conn net.Conn) {
 	defer conn.Close()
 	data := make([]byte, MaxDatagramSize)
 	var repeat int32 = 1
-	for {
+	for repeat != 0 {
 		//Read the data waiting on the connection and put it in the data buffer
-
 		n, err := conn.Read(data)
 		if err != nil {
 			log.Println(err)
@@ -56,15 +33,19 @@ func sendMsgToClient(conn net.Conn) {
 		n, err = conn.Write(b)
 		log.Println("Sent", n, "bytes")
 		repeat = protodata.GetMsgLength()
-		log.Println("Repeat = ", repeat)
+		//log.Println("Repeat = ", repeat)
 	}
 }
 
 func TcpMsgServer() {
 	log.Println("Starting TcpMsgServer")
 	// listen on all interfaces
-	ln, _ := net.Listen("tcp", FetcherPort)
-
+	ln, err := net.Listen("tcp", FetcherPort)
+	if err != nil {
+		// handle error
+		log.Println(err)
+		return
+	}
 	// accept connection on port
 	for {
 		conn, err := ln.Accept()
@@ -86,6 +67,7 @@ func TcpFetcher(store *msgstore, keys []int64, src string) {
 			return
 		}
 		defer conn.Close()
+		buf := make([]byte, MaxDatagramSize)
 
 		for i, k := range keys {
 			log.Println("Fetcher fetching MsgID:", k)
@@ -110,7 +92,6 @@ func TcpFetcher(store *msgstore, keys []int64, src string) {
 				return
 			}
 			log.Println("Wrote header ", n)
-			buf := make([]byte, MaxDatagramSize)
 			n, err = conn.Read(buf)
 			if err != nil {
 				log.Println(err)
@@ -123,7 +104,7 @@ func TcpFetcher(store *msgstore, keys []int64, src string) {
 				log.Println(err)
 				return
 			}
-			log.Println("Downloaded message: ", m)
+			log.Println("CONFIG-UPDATE-RECEIVED { \"update_id\" =", k, "}")
 			store.Add(k)
 			SaveAsFile(k, b, StoreDir)
 		}
