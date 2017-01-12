@@ -50,7 +50,7 @@ func RandStringBytesMaskImprSrc(n int32) string {
 }
 
 func RandomMsgGen(forever bool, repeat int64) {
-	log.Println("Generating Random Messages")
+	log.Printf("Generating Random Messages")
 	addr, err := net.ResolveUDPAddr("udp", srvAddr)
 	if err != nil {
 		log.Fatal(err)
@@ -74,15 +74,15 @@ func RandomMsgGen(forever bool, repeat int64) {
 			},
 		}
 		//m := Msg{id, RandStringBytesMaskImprSrc(maxLength)}
-		log.Println("Sending message", m)
+		log.Printf("CONFIG-UPDATE-SENT { \"update_id\" = %d }", id)
 		sendbuf, err := proto.Marshal(m)
 		if err != nil {
-			log.Fatal("protobuf Marshal failed", err)
+			log.Fatalf("protobuf Marshal failed %s", err)
 		}
 		_, err = c.Write(sendbuf) /*fire it out an existing udp
 		connection*/
 		if err != nil {
-			log.Fatal(err, "sending slice")
+			log.Fatalf("%s", err)
 		}
 		time.Sleep(interval * time.Millisecond)
 		id++
@@ -90,8 +90,9 @@ func RandomMsgGen(forever bool, repeat int64) {
 }
 
 func main() {
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
-	log.Println("Starting Multicaster")
+	log.SetFlags(log.Lmicroseconds | log.Lshortfile)
+	log.SetPrefix("mcaster\t")
+	log.Printf("Starting Multicaster")
 	RandomMsgGen(true, 0)
 	fmt.Println("done")
 }

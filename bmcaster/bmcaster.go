@@ -64,7 +64,7 @@ func externalIP() (string, error) {
 }
 
 func main() {
-	log.SetFlags(log.LstdFlags | log.Lmicroseconds | log.Lshortfile)
+	log.SetFlags(log.Lmicroseconds | log.Lshortfile)
 	/*	if _, err := os.Stat(LogDir); err != nil {
 			if os.IsNotExist(err) {
 				os.Mkdir(LogDir, 0755)
@@ -93,6 +93,7 @@ func main() {
 	if err != nil {
 		log.Printf("Failed to create memberlist: " + err.Error())
 	}
+	log.SetPrefix(list.LocalNode().Name + "\t")
 	var store msgstore
 
 	// Join an existing cluster by specifying at least one known member.
