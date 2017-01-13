@@ -58,7 +58,9 @@ func sendDigest(store *msgstore, list *memberlist.Memberlist) {
 		}
 		addr, err := net.ResolveUDPAddr("udp", to.Name+Digestport)
 		if err != nil {
-			log.Fatal(err)
+			log.Printf("Cannot find host %s", to.Name)
+			i++
+			continue
 		}
 		c, err := net.DialUDP("udp", nil, addr)
 		if err != nil {

@@ -15,7 +15,7 @@ import _ "net/http/pprof"
 const (
 	SrvAddr          = "224.0.0.1:9999"
 	MaxDatagramSize  = 65507
-	Memberlist       = "n0"
+	Memberlist       = "bimodalmcast_node_1"
 	Digestinterval   = time.Duration(5000) //Millisecond
 	Digestratio      = 0.5                 //Ratio of nodes which should be send a digest msg
 	Digestport       = ":6000"
