@@ -2,7 +2,9 @@ version: '2'
 services:
   multicaster:
     build: ./multicaster
+    mem_limit: 15m
     privileged: true
   node:
     build: ./bmcaster
+    mem_limit: 15m
     privileged: true

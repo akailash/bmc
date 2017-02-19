@@ -27,4 +27,5 @@ docker-compose rm -f
 docker-compose pull
 INFO "Please run \`docker exec -it <node> bash\` in another terminal after the containers are up"
 INFO "Please scale using command \`docker-compose scale multicaster=1 node=10\` to change the number of nodes"
-docker-compose up --build 
+docker-compose build
+docker-compose scale multicaster=1 node=6
